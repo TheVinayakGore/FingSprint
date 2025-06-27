@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { FiGithub, FiTwitter, FiLinkedin } from "react-icons/fi";
+import { FiGithub, FiLinkedin } from "react-icons/fi";
+import { FaXTwitter } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 
 export default function Footer() {
@@ -27,7 +28,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="Twitter"
           >
-            <FiTwitter className="w-5 h-5 hover:text-primary transition-colors" />
+            <FaXTwitter className="w-5 h-5 hover:text-primary transition-colors" />
           </Link>
         </Button>
         <Button asChild variant="ghost" size="icon">
