@@ -1,14 +1,15 @@
+import React from "react";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Label } from "@/components/ui/label";
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 import { FiClock } from "react-icons/fi";
+import { Label } from "./ui/label";
+import { Progress } from "./ui/progress";
+import { Button } from "./ui/button";
 import HistoryCard from "./HistoryCard";
 
 type TestResult = {
@@ -30,7 +31,7 @@ interface StatsCardProps {
   formatTime: (seconds: number) => string;
 }
 
-export default function StatsCard({
+const StatsCard = ({
   time,
   wpm,
   accuracy,
@@ -38,44 +39,49 @@ export default function StatsCard({
   history,
   formatDate,
   formatTime,
-}: StatsCardProps) {
+}: StatsCardProps) => {
   return (
-    <Card className="md:col-span-1 shadow-none hover:shadow-lg">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FiClock className="text-primary" /> Your Stats
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <Label>Time Elapsed</Label>
-          <div className="text-2xl font-mono">{time}</div>
-        </div>
-        <div>
-          <Label>Words Per Minute</Label>
-          <div className="text-2xl font-mono">{wpm}</div>
-        </div>
-        <div>
-          <Label>Accuracy</Label>
-          <div className="flex items-center gap-2">
-            <Progress value={accuracy} className="h-2" />
-            <span className="text-2xl font-mono">{accuracy}%</span>
+    <>
+      <Card className="md:col-span-1 md:max-h-[55rem]">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FiClock className="text-primary" /> Your Stats
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Time Elasped</Label>
+            <div className="text-2xl font-mono">{time}</div>
           </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex flex-col items-start gap-2 h-full">
-        <Button onClick={onRestart} className="w-full" variant="outline">
-          Restart Test
-        </Button>
-        <h1 className="text-start font-medium text-lg md:text-xl pb-2 mb-2 border-b w-full">
-          History of Test
-        </h1>
-        <HistoryCard
-          history={history}
-          formatDate={formatDate}
-          formatTime={formatTime}
-        />
-      </CardFooter>
-    </Card>
+          <div>
+            <Label>Words Per Minute</Label>
+            <div className="text-2xl font-mono">{wpm}</div>
+          </div>
+          <div>
+            <Label>Accuracy</Label>
+            <div className="flex items-center gap-2">
+              <Progress value={accuracy} className="h-2" />
+              <span className="text-2xl font-mono">{accuracy}%</span>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-col items-start gap-2 h-full">
+          <Button onClick={onRestart} variant="outline" className="w-full">
+            Restart Test
+          </Button>
+          <h1 className="text-start font-medium text-lg md:text-xl pb-2 mb-2 border-b w-full">
+            History of Test
+          </h1>
+          {/* History Cards */}
+          <HistoryCard
+            history={history}
+            formatDate={formatDate}
+            formatTime={formatTime}
+          />
+        </CardFooter>
+      </Card>
+    </>
   );
-}
+};
+
+export default StatsCard;

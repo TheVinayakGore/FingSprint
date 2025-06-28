@@ -1,3 +1,5 @@
+import React from "react";
+
 type TestResult = {
   wpm: number;
   accuracy: number;
@@ -11,11 +13,7 @@ interface HistoryCardProps {
   formatTime: (seconds: number) => string;
 }
 
-export default function HistoryCard({
-  history,
-  formatDate,
-  formatTime,
-}: HistoryCardProps) {
+const HistoryCard = ({ history, formatDate, formatTime }: HistoryCardProps) => {
   return (
     <>
       <main className="flex flex-col w-full max-h-60 md:max-h-[30rem] overflow-auto">
@@ -24,7 +22,7 @@ export default function HistoryCard({
             history.map((test, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center p-3 border border-primary/50 rounded-md bg-primary/5"
+                className="flex items-center justify-between p-3 border border-primary/50 rounded-md bg-primary/5"
               >
                 <div>
                   <div className="font-medium">{test.wpm} WPM</div>
@@ -46,11 +44,13 @@ export default function HistoryCard({
             ))
           ) : (
             <p className="opacity-60 text-center">
-              No test history yet. Complete a test to see your results here.
+              No test history yet. Complete a test to use your results here.
             </p>
           )}
         </div>
       </main>
     </>
   );
-}
+};
+
+export default HistoryCard;

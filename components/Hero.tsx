@@ -1,14 +1,14 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { FiCheckCircle } from "react-icons/fi";
-import { FaKeyboard } from "react-icons/fa";
-import { format } from "date-fns";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import StatsCard from "./StatsCard";
-import IdealWPMCard from "./IdealWPMCard";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { FaKeyboard } from "react-icons/fa";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 import InstructionsCard from "./InstructionsCard";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import IdealWPMCard from "./IdealWPMCard";
+import { FiCheckCircle } from "react-icons/fi";
+import { format } from "date-fns";
 
 type TestResult = {
   wpm: number;
@@ -25,7 +25,7 @@ const sampleTexts = [
   "Life is what happens when you're busy making other plans.",
 ];
 
-export default function Hero() {
+const Hero = () => {
   const [text, setText] = useState("");
   const [userInput, setUserInput] = useState("");
   const [time, setTime] = useState(0);
@@ -37,7 +37,7 @@ export default function Hero() {
   const [showHistory, setShowHistory] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load history from localStorage on component mount
+  // Load History from localstorage on component mount
   useEffect(() => {
     const savedHistory = localStorage.getItem("typingTestHistory");
     if (savedHistory) {
@@ -63,17 +63,17 @@ export default function Hero() {
     if (inputRef.current) inputRef.current.focus();
   };
 
-  // Save test result to history (now memoized with useCallback)
+  // Save test results to history (now memoized with useCallback)
   const saveResult = useCallback(
     (result: TestResult) => {
-      const newHistory = [result, ...history].slice(0, 10); // Keep last 10 results
+      const newHistory = [result, ...history].slice(0, 10); // keep last 10 results
       setHistory(newHistory);
       localStorage.setItem("typingTestHistory", JSON.stringify(newHistory));
     },
     [history]
   ); // Only recreate when history changes
 
-  // Timer logic
+  // Timer Logic
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRunning && !isComplete) {
@@ -89,21 +89,21 @@ export default function Hero() {
     if (userInput.length > 0 && !isComplete) {
       setIsRunning(true);
 
-      // Calculate accuracy
+      // calculate accuracy
       const correctChars = [...userInput].filter(
         (char, i) => char === text[i]
       ).length;
       const newAccuracy = Math.round((correctChars / userInput.length) * 100);
       setAccuracy(newAccuracy);
 
-      // Calculate WPM (5 chars = 1 word)
+      // calculate WPM (5 chars = 1 word)
       const words = userInput.length / 5;
       const minutes = time / 60;
       const newWpm = minutes > 0 ? Math.round(words / minutes) : 0;
       setWpm(newWpm);
 
-      // Check if completed
-      if (userInput.length === text.length) {
+      // Check if Completed
+      if (userInput.length == text.length) {
         const result = {
           wpm: newWpm,
           accuracy: newAccuracy,
@@ -113,12 +113,12 @@ export default function Hero() {
         saveResult(result);
         setIsComplete(true);
         setIsRunning(false);
+      } else if (userInput.length === 0) {
+        setAccuracy(100);
+        setWpm(0);
       }
-    } else if (userInput.length === 0) {
-      setAccuracy(100);
-      setWpm(0);
     }
-  }, [userInput, text, time, isComplete, saveResult]);
+  }, [userInput, isComplete, text, time, saveResult]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!isComplete) {
@@ -136,22 +136,26 @@ export default function Hero() {
 
   return (
     <>
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 md:p-10 w-full">
-        <StatsCard
-          time={formatTime(time)}
-          wpm={wpm}
-          accuracy={accuracy}
-          onRestart={resetTest}
-          onToggleHistory={() => setShowHistory(!showHistory)}
-          showHistory={showHistory}
-          history={history}
-          formatDate={formatDate}
-          formatTime={formatTime}
-        />
-        <div className="md:col-span-2 space-y-6">
+      <main className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-3 gap-6 p-6 md:p-10 w-full">
+        <div className="col-span-2 lg:col-span-1">
+          <StatsCard
+            time={formatTime(time)}
+            wpm={wpm}
+            accuracy={accuracy}
+            onRestart={resetTest}
+            onToggleHistory={() => setShowHistory(!showHistory)}
+            showHistory={showHistory}
+            history={history}
+            formatDate={formatDate}
+            formatTime={formatTime}
+          />
+
+        </div>
+        <div className="col-span-2 lg:col-span-2 space-y-6">
+          {/* Ideal WPM Card */}
           <IdealWPMCard />
           {/* Typing Test Card */}
-          <Card className="shadow-none hover:shadow-lg">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FaKeyboard className="text-primary" /> Typing Test
@@ -164,7 +168,7 @@ export default function Hero() {
                     let color = "";
                     if (index < userInput.length) {
                       color =
-                        userInput[index] === char
+                        userInput[index] == char
                           ? "text-green-600"
                           : "text-red-600";
                     }
@@ -176,9 +180,8 @@ export default function Hero() {
                   })}
                 </p>
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="typing-input">Type the text above :</Label>
+                <Label>Type the text above : </Label>
                 <Input
                   id="typing-input"
                   ref={inputRef}
@@ -187,16 +190,15 @@ export default function Hero() {
                   disabled={isComplete}
                   placeholder={
                     isComplete
-                      ? "Test completed ! Click restart to try again"
+                      ? "Test completed ! Click Restart Test to try again"
                       : "Start typing..."
                   }
-                  className="text-lg py-6"
+                  className="text-sm md:text-lg py-4 md:py-6"
                   autoFocus
                 />
               </div>
             </CardContent>
           </Card>
-
           {/* Results Banner */}
           {isComplete && (
             <div className="p-4 bg-green-100 border border-green-200 rounded-md flex items-center gap-3">
@@ -206,15 +208,18 @@ export default function Hero() {
                   Test Completed !
                 </h3>
                 <p className="text-green-700">
-                  Your typing speed: <strong>{wpm} WPM</strong> with{" "}
+                  Your typing : <strong>{wpm} WPM</strong> with{" "}
                   <strong>{accuracy}%</strong> accuracy in {formatTime(time)}
                 </p>
               </div>
             </div>
           )}
+          {/* Instructions Card */}
           <InstructionsCard />
         </div>
       </main>
     </>
   );
-}
+};
+
+export default Hero;
